@@ -1,11 +1,63 @@
-<? include "book-data.php" ?>
-<? function Servers(){
+<? include "book-data.php";
+
+   function Servers(){
    // loop thru servers
       for ($i = 1; $i <= 5; $i++) {
          echo "<option>Server" . $i . "</option>";
    }
 }
-?>                  
+/*
+   function output ()
+   {
+               echo '<div class="form-group has-error">';
+               echo '   <label for="exampleInputEmail1">Email address</label>';
+               echo '   <input type="email" class="form-control" name="email" value="">';
+               echo '   <p class="help-block">Enter an email</p>';
+               echo '</div>';
+   }
+*/
+   function email($title, $inBox){
+      if ($inBox === null || $inBox === "")
+      {
+         echo '<div class="has-error">';
+         echo '   <label for="Email">Email address</label>';
+         echo '   <input type="email" class="form-control" name="email" value="">';
+         echo '   <p class="help-block">No ' . $title . ' entered</p>';
+         echo '</div>';
+      }
+      else  {
+         echo '<div class="form-group">';
+         echo '   <label for="Email">Email address</label>';
+         echo '   <input type="email" class="form-control" name="email" value="' . $inBox . '">';  // should this not be empty after a submit?
+         echo '   <p class="help-block">Entered ' . $title . ' ' . $inBox . '</p>';
+   // attempting to compare email with input?  why does it not print?
+         if ($inbox == $email)
+         {
+            echo '<p>' . $inbox . ' = ' . $email . '</p>';     //debugging
+         }
+         else{
+            echo '<p>' . $inbox . ' ?≠? ' . $email . '</p>';   // debugging
+         }
+      }
+   }
+              
+function password($title, $inBox){
+      if ($inBox === null || $inBox === "")
+      {
+         echo '<div class="has-error">';
+         echo '   <label for="exampleInputPassword1">Password</label>';
+         echo '   <input type="password" class="form-control" name="password" value="">';
+         echo '   <p class="help-block">No ' . $title . ' entered</p>';
+         echo '</div>';
+      }
+      else  {
+         echo '<div class="form-group">';
+         echo '   <label for="exampleInputPassword1">Password</label>';
+         echo '   <input type="password" class="form-control" name="password" value="' . $inBox . '">';
+         echo '   <p class="help-block">Entered ' . $title . ' ' . $inBox . '</p>';
+      }
+   }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,18 +91,13 @@
                <h2>Login</h2> 
             </div>
             <form role="form">
-              <div class="form-group has-error">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" name="email" value="">
-                <p class="help-block">Enter an email</p>
-              </div>
-              <div class="form-group has-error">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" name="password" >
-                <p class="help-block">Email and password not found</p>
-              </div>
-              <div class="form-group">
 
+              <?
+                 email("Email", $_GET["email"]);
+
+                 password("Password", $_GET["password"]);
+?>               
+                <div class="form-group">
                 <label for="exampleInputFile">Server</label>
                 <select name="server" class="form-control">
                   <?
@@ -59,16 +106,6 @@
                 </select>             
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
-              
-              <?  /*
-                  if ($email.value === null || $email.value === ""){
-                  //-------------
-                  echo ""
-                  var varname = function (zzzz) {
-                     zzzz.classList.add(has-error);
-              }
-*/              ?>
-
             </form>  
          </div>
       </div>
