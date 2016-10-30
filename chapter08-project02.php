@@ -1,4 +1,7 @@
 <?php
+   include 'art-data.php';
+   $subTotal = 0;
+
    function specials()
    {
    // loop thru specials
@@ -7,12 +10,61 @@
          echo '<li><a href="#">Special ' . $i . '</a></li>';
       }
    }
-/*
-function outPutCartRow($file, $product, $quantity, $price){
+
+   function SubTotal($amount)
+   {
+      // calculate subtotal
+      global $subTotal;
+      $subTotal += $amount;
+      return $subTotal;
+   }
+
+   function Tax ($subTotal)
+   {
+      // calculate tax
+      global $subTotal;
+      return $subTotal * .1;
+   }
    
-}
-*/
+   function Shipping ($subTotal)
+   {
+      // calculate shipping
+      $shipping = 100;
+      if ($subTotal > 2000)
+      {
+         $shipping = 0;
+      }
+      return $shipping;
+   }
+
+   function outputSums ($class, $text, $amount)
+   {
+      // display subtotal, tax, shipping, and grand total
+      printf ('<tr class="%s">', $class);
+      printf ('   <td colspan="4" class="moveRight"> %s</td>', $text);
+      printf ('   <td colspan="4" class="moveRight"> $%10.2f</td>', $amount); // added move right as all #'s are right justified
+      printf ('</tr>');
+   }
+   
+   function outPutCartRow ($file, $product, $quantity, $price)
+   {
+      // write table rows with variables
+      // calculate the amount column of quantity times price each
+      $amount = $quantity * $price;
+      // the actual table row
+      echo '<tr>';
+      printf ('   <td><img class="img-thumbnail" src="images/art/tiny/%s" alt="..."></td>', $file);
+      printf ('   <td>%s</td>', $product);
+      printf ('   <td class="moveRight"> %d</td>', $quantity);     // added move right as all #'s are right justified
+      printf ('   <td class="moveRight"> $%10.2f</td>', $price);   // added move right as all #'s are right justified
+      printf ('   <td class="moveRight"> $%10.2f</td>', $amount);  // added move right as all #'s are right justified
+      echo '</tr>';
+
+      // update the subtotal with each added row
+      $subTotal = SubTotal ($amount);
+   }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,9 +86,8 @@ function outPutCartRow($file, $product, $quantity, $price){
 </head>
 
 <body>
-<?php
-   include "art-header.inc.php"
-?>
+   
+<? include 'art-header.inc.php' ?>
 
 <div class="container">
 
@@ -52,36 +103,19 @@ function outPutCartRow($file, $product, $quantity, $price){
             <th>Price</th>
             <th>Amount</th>
          </tr>
-         <tr>
-            <td><img class="img-thumbnail" src="images/art/tiny/116010.jpg" alt="..."></td>
-            <td>Artist Holding a Thistle</td>
-            <td>2</td>
-            <td>$500</td>
-            <td>$1000</td>
-         </tr>
-         <tr>
-            <td><img class="img-thumbnail" src="images/art/tiny/113010.jpg" alt="..."></td>
-            <td>Self-portrait in a Straw Hat</td>
-            <td>1</td>
-            <td>$700</td>
-            <td>$700</td>
-         </tr> 
-         <tr class="success strong">
-            <td colspan="4" class="moveRight">Subtotal</td>
-            <td >$1700</td>
-         </tr>
-         <tr class="active strong">
-            <td colspan="4" class="moveRight">Tax</td>
-            <td>$170</td>
-         </tr>  
-         <tr class="strong">
-            <td colspan="4" class="moveRight">Shipping</td>
-            <td>$100</td>
-         </tr> 
-         <tr class="warning strong text-danger">
-            <td colspan="4" class="moveRight">Grand Total</td>
-            <td>$1970</td>
-         </tr>    
+
+<?
+         // go print each row
+         outPutCartRow($file1, $product1, $quantity1, $price1);
+         outPutCartRow($file2, $product2, $quantity2, $price2);
+
+         // go print each agrigate row
+         outputSums ("success strong", "Subtotal", $subTotal);
+         outputSums ("active strong", "Tax", Tax ($subTotal));
+         outputSums ("strong", "Shipping", Shipping($subTotal));
+         outputSums ("warning strong text-danger", "Grand Total", $subTotal + $tax + $shipping);
+?>
+
          <tr >
             <td colspan="4" class="moveRight"><button type="button" class="btn btn-primary" >Continue Shopping</button></td>
             <td><button type="button" class="btn btn-success" >Checkout</button></td>
@@ -90,10 +124,7 @@ function outPutCartRow($file, $product, $quantity, $price){
 
 </div>  <!-- end container -->
 
-<?php
-   include "art-footer.inc.php"
-?>
-
+<? include 'art-footer.inc.php' ?>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
