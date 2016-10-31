@@ -1,62 +1,88 @@
 <? include "book-data.php";
 
-   function Servers(){
-   // loop thru servers
-      for ($i = 1; $i <= 5; $i++) {
-         echo "<option>Server" . $i . "</option>";
-   }
-}
-/*
-   function output ()
+   $inMail;
+   $inPass;
+   $response;
+      
+   function Servers()
    {
-               echo '<div class="form-group has-error">';
-               echo '   <label for="exampleInputEmail1">Email address</label>';
-               echo '   <input type="email" class="form-control" name="email" value="">';
-               echo '   <p class="help-block">Enter an email</p>';
-               echo '</div>';
-   }
-*/
-   function email($title, $inBox){
-      if ($inBox === null || $inBox === "")
+   // loop thru servers
+      for ($i = 1; $i <= 5; $i++)
       {
-         echo '<div class="has-error">';
-         echo '   <label for="Email">Email address</label>';
-         echo '   <input type="email" class="form-control" name="email" value="">';
-         echo '   <p class="help-block">No ' . $title . ' entered</p>';
-         echo '</div>';
+         echo "<option>Server" . $i . "</option>";
       }
-      else  {
-         echo '<div class="form-group">';
-         echo '   <label for="Email">Email address</label>';
-         echo '   <input type="email" class="form-control" name="email" value="' . $inBox . '">';  // should this not be empty after a submit?
-         echo '   <p class="help-block">Entered ' . $title . ' ' . $inBox . '</p>';
-   // attempting to compare email with input?  why does it not print?
-         if ($inbox == $email)
+   }
+   
+   function PassCheck ($title, $inBox)
+   {
+      global $email;
+      global $password;
+      global $inMail;
+      global $inPass;
+      
+      if ($title == "email")
+      {
+         $inMail = $inBox;
+      }
+      else
+      {
+         $inPass = $inBox;
+      }
+
+      if ($password == $inPass && $email == $inMail)
+      {
+         $response = '<br><br><p class="has-error">Welcome Back!.</p>';
+      }
+      else
+      {
+         if ( ( !$inMail == null && !$inMail == "" ) && ( !$inPass == null && !$inPass == "" ) )
          {
-            echo '<p>' . $inbox . ' = ' . $email . '</p>';     //debugging
-         }
-         else{
-            echo '<p>' . $inbox . ' ?≠? ' . $email . '</p>';   // debugging
+            $response = '<br><br><p class="has-error">Email and Password do not match.</p>';
          }
       }
+//      echo '<p>Password = ' . $password . ' Email = ' . $email . ' Inpass = ' . $inPass . ' Inmail = ' . $inMail . '</p>';
+      return $response;
    }
-              
-function password($title, $inBox){
+
+   function BuildLine ($title, $label)
+   {
+      $line;
+      if ($title == "email")
+      {
+         $line = '   <p class="help-block">Enter an ' . $label . '</p><br>';
+      }
+      else
+      {
+         $line = '   <p class="help-block">Enter a ' . $label . '</p><br>';
+      }
+   return $line;
+   }
+
+   function DataForm ($title, $inBox, $label)
+   {
+      global $response;
+      
       if ($inBox === null || $inBox === "")
       {
          echo '<div class="has-error">';
-         echo '   <label for="exampleInputPassword1">Password</label>';
-         echo '   <input type="password" class="form-control" name="password" value="">';
-         echo '   <p class="help-block">No ' . $title . ' entered</p>';
+         echo '   <label for="Email">' . $label . '</label>';
+         echo '   <input type="' . $title . '" class="form-control" name="' . $title . '" value="' . $inBox . '">';
+         echo BuildLine($title, $label);  
          echo '</div>';
       }
-      else  {
+      else
+      {
          echo '<div class="form-group">';
-         echo '   <label for="exampleInputPassword1">Password</label>';
-         echo '   <input type="password" class="form-control" name="password" value="' . $inBox . '">';
-         echo '   <p class="help-block">Entered ' . $title . ' ' . $inBox . '</p>';
-      }
+         echo '   <label for="Email">' . $label . '</label>';
+         echo '   <input type="' . $title . '" class="form-control" name="' . $title . '" value="' . $inBox . '">';  // should this not be empty after a submit?
+         echo '   <p class="help-block"></p><br>';
+         echo '</div>';
+
+         $response = PassCheck ($title, $inBox);
+     }
+   return $response;
    }
+
 ?>
 
 <!DOCTYPE html>
@@ -92,10 +118,9 @@ function password($title, $inBox){
             </div>
             <form role="form">
 
-              <?
-                 email("Email", $_GET["email"]);
-
-                 password("Password", $_GET["password"]);
+<?
+                 DataForm ("email", $_GET["email"], "Email Address");
+                 DataForm ("password", $_GET["password"], "Password");
 ?>               
                 <div class="form-group">
                 <label for="exampleInputFile">Server</label>
@@ -106,6 +131,7 @@ function password($title, $inBox){
                 </select>             
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
+              <? echo $response; ?>
             </form>  
          </div>
       </div>
