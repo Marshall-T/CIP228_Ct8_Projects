@@ -72,7 +72,7 @@
       }
       else
       {
-         echo '<div class="form-group">';
+         echo '<div class="has-error">';
          echo '   <label for="Email">' . $label . '</label>';
          echo '   <input type="' . $title . '" class="form-control" name="' . $title . '" value="' . $inBox . '">';  // should this not be empty after a submit?
          echo '   <p class="help-block"></p><br>';
